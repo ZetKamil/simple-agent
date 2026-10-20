@@ -2,22 +2,30 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Customer;
+use App\Models\Project;
+use App\Models\Invoice;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        Customer::factory(10)->create()->each(function (Customer $customer) {
+            $projects = Project::factory(rand(2, 4))->create([
+                'customer_id' => $customer->id,
+            ]);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+            foreach ($projects as $project) {
+                $invoices = Invoice::factory(rand(2, 4))->create([
+                    'project_id' => $project->id,
+                ]);
+
+                // Ustaw rzeczywisty koszt z sumy faktur:
+                $project->update([
+                    'actual_cost' => $invoices->sum('amount'),
+                ]);
+            }
+        });
     }
 }
