@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\AiProjectAnalysisController;
 
 
 Route::get('/user', function (Request $request) {
@@ -16,3 +17,6 @@ Route::get('health', [HealthController::class, 'check']);
 
 Route::apiResource('customers', CustomerController::class);
 Route::apiResource('projects', ProjectController::class);
+
+
+Route::post('/ai/projects/{project}/analyze', [AiProjectAnalysisController::class, 'analyze']);

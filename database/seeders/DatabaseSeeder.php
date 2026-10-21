@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
                     'project_id' => $project->id,
                 ]);
 
-                // Ustaw rzeczywisty koszt z sumy faktur:
+                // Sync project actual_cost with the total sum of generated invoices:
                 $project->update([
                     'actual_cost' => $invoices->sum('amount'),
                 ]);

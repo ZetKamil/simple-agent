@@ -4,10 +4,17 @@ namespace App\Services;
 
 use App\Models\Project;
 
+/**
+ * Service handling financial calculations, cost synchronization,
+ * and budget deviation metrics for construction projects.
+ */
 class ProjectCostService
 {
     /**
-     * Zsumuj wszystkie faktury i zsynchronizuj actual_cost projektu w bazie.
+     * Aggregate all project invoices and synchronize actual_cost in the database.
+     *
+     * @param Project $project
+     * @return void
      */
     public function syncProjectCosts(Project $project): void
     {
@@ -19,7 +26,10 @@ class ProjectCostService
     }
 
     /**
-     * Wylicz matematyczną analizę budżetu pod kątem ryzyka dla Agenta AI.
+     * Calculate financial budget deviation and risk metrics.
+     *
+     * @param Project $project
+     * @return array
      */
     public function calculateDeviation(Project $project): array
     {
@@ -28,7 +38,7 @@ class ProjectCostService
 
         $deviationAmount = $actualCost - $budget;
 
-        // Zabezpieczenie przed dzieleniem przez zero, gdyby budżet był 0:
+        // Prevent division by zero if budget is zero
         $deviationPercentage = $budget > 0
             ? round(($deviationAmount / $budget) * 100, 2)
             : 0.0;
@@ -46,7 +56,10 @@ class ProjectCostService
     }
 
     /**
-     * Określ poziom ryzyka (low, medium, high) dla Agenta AI.
+     * Determine risk severity level based on overrun percentage.
+     *
+     * @param float $percentage
+     * @return string ('none' | 'medium' | 'high')
      */
     private function determineSeverity(float $percentage): string
     {
@@ -55,9 +68,9 @@ class ProjectCostService
         }
 
         if ($percentage <= 10) {
-            return 'medium'; // Przekroczenie do 10%
+            return 'medium'; // Overrun up to 10%
         }
 
-        return 'high'; // Przekroczenie powyżej 10% — alarm dla kierownika!
+        return 'high'; // Critical overrun above 10%
     }
 }

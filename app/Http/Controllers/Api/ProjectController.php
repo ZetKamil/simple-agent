@@ -31,7 +31,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project): JsonResponse
     {
-        // Używamy ->load(), żeby doładować relacje do pojedynczego projektu:
+        // Eager load relationships on the existing model instance
         return response()->json(
             $project->load(['customer', 'invoices'])
         );
